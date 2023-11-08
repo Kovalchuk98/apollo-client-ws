@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     vue(),
     visualizer({
-      template: "treemap", // or sunburst
+      template: "sunburst", // or sunburst
       open: true,
       gzipSize: true,
       brotliSize: true,

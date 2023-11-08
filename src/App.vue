@@ -1,7 +1,8 @@
 <script setup lang="ts">
-
+import { watch } from "vue"
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
+import { useSubscription } from "@vue/apollo-composable"
 
 const { result } = useQuery(gql`
       query Visitors {
@@ -10,6 +11,33 @@ const { result } = useQuery(gql`
         }
       }
     `)
+
+const { result: newMessege } = useSubscription(gql`
+      subscription onMessageAdded {
+        messageNew {
+        id
+        text
+        dialog {
+          id
+          visitor {
+            id
+          }
+          }
+        }
+      }
+    `)
+
+  watch(
+      newMessege,
+      data => {
+        console.log("New message received:", data.messageNew)
+      },
+      // {
+      //   lazy: true // Don't immediately execute handler
+      // }
+    )
+
+
 
 </script>
 
@@ -24,7 +52,9 @@ const { result } = useQuery(gql`
   <div>
     {{ result?.visitors }}
   </div>
-
+  <div>
+    new message block  <br>{{ newMessege?.messageNew }}
+  </div>
   <main>
     <TheWelcome />
   </main>
